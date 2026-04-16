@@ -45,3 +45,9 @@ coverage/
 .cache/
 .temp/
 .tmp/
+
+# Nested git repositories
+ShingarJewelryApp/
+
+# Duplicate android folders
+user-app/android/android/

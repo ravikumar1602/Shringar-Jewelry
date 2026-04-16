@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(~/AppData/Local/Android/Sdk/emulator/emulator -list-avds)",
+      "Read(//c/Users/ravi1/AppData/Local/Android/Sdk/**)",
+      "Bash(~/AppData/Local/Android/Sdk/platform-tools/adb devices *)"
+    ]
+  }
+}
