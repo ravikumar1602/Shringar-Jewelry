@@ -1,0 +1,12 @@
+'use strict';
+const express = require('express');
+const router = express.Router();
+const { protect } = require('../middleware/auth');
+const { uploadProduct } = require('../config/cloudinary');
+const c = require('../controllers/reviewController');
+router.get('/products/:productId/reviews', c.getProductReviews);
+router.post('/products/:productId/reviews', protect, uploadProduct.array('images', 3), c.createReview);
+router.patch('/reviews/:id', protect, c.updateReview);
+router.delete('/reviews/:id', protect, c.deleteReview);
+router.post('/reviews/:id/helpful', protect, c.voteHelpful);
+module.exports = router;

@@ -1,0 +1,12 @@
+'use strict';
+const express = require('express');
+const router = express.Router();
+const { protect, restrictTo } = require('../middleware/auth');
+const c = require('../controllers/paymentController');
+router.post('/webhook', express.raw({ type: 'application/json' }), c.razorpayWebhook);
+router.use(protect);
+router.post('/create-order', c.createRazorpayOrder);
+router.post('/verify', c.verifyPayment);
+router.get('/details/:orderId', c.getPaymentDetails);
+router.post('/refund/:orderId', restrictTo('admin','superadmin'), c.processRefund);
+module.exports = router;

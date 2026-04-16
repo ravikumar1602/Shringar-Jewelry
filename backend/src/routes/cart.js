@@ -1,0 +1,14 @@
+'use strict';
+const express = require('express');
+const router = express.Router();
+const { protect } = require('../middleware/auth');
+const c = require('../controllers/cartController');
+router.use(protect);
+router.get('/', c.getCart);
+router.post('/add', c.addToCart);
+router.patch('/items/:itemId', c.updateCartItem);
+router.delete('/items/:itemId', c.removeFromCart);
+router.delete('/clear', c.clearCart);
+router.post('/coupon', c.applyCoupon);
+router.delete('/coupon', c.removeCoupon);
+module.exports = router;

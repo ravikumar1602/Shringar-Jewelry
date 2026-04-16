@@ -1,0 +1,14 @@
+'use strict';
+const express = require('express');
+const router = express.Router();
+const { protect, restrictTo } = require('../middleware/auth');
+const c = require('../controllers/orderController');
+router.use(protect);
+router.post('/', c.createOrder);
+router.get('/', c.getUserOrders);
+router.get('/admin/all', restrictTo('admin','superadmin'), c.adminGetOrders);
+router.get('/:id', c.getOrder);
+router.patch('/:id/cancel', c.cancelOrder);
+router.post('/:id/return', c.requestReturn);
+router.patch('/admin/:id', restrictTo('admin','superadmin'), c.adminUpdateOrder);
+module.exports = router;

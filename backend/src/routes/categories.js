@@ -1,0 +1,12 @@
+'use strict';
+const express = require('express');
+const router = express.Router();
+const { protect, restrictTo } = require('../middleware/auth');
+const { uploadCategoryImage } = require('../config/cloudinary');
+const c = require('../controllers/categoryController');
+router.get('/', c.getCategories);
+router.get('/:id', c.getCategory);
+router.post('/', protect, restrictTo('admin','superadmin'), uploadCategoryImage.single('image'), c.createCategory);
+router.put('/:id', protect, restrictTo('admin','superadmin'), uploadCategoryImage.single('image'), c.updateCategory);
+router.delete('/:id', protect, restrictTo('admin','superadmin'), c.deleteCategory);
+module.exports = router;

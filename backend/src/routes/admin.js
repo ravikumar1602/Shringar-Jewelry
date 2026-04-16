@@ -1,0 +1,16 @@
+'use strict';
+const express = require('express');
+const router = express.Router();
+const { protect, restrictTo } = require('../middleware/auth');
+const c = require('../controllers/adminController');
+router.use(protect, restrictTo('admin','superadmin'));
+router.get('/dashboard', c.getDashboardStats);
+router.get('/analytics/sales', c.getSalesAnalytics);
+router.get('/analytics/inventory', c.getInventoryReport);
+router.get('/users', c.getAllUsers);
+router.patch('/users/:id', c.updateUserStatus);
+router.get('/coupons', c.manageCoupons);
+router.post('/coupons', c.manageCoupons);
+router.put('/coupons/:id', c.manageCoupons);
+router.delete('/coupons/:id', c.manageCoupons);
+module.exports = router;
