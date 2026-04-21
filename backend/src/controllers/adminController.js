@@ -138,7 +138,7 @@ exports.getAllUsers = async (req, res, next) => {
 
     const skip = (page - 1) * limit;
     const [users, total] = await Promise.all([
-      User.find(query).sort('-createdAt').skip(skip).limit(parseInt(limit)),
+      User.find(query).select('+isActive').sort('-createdAt').skip(skip).limit(parseInt(limit)),
       User.countDocuments(query),
     ]);
 
@@ -159,7 +159,7 @@ exports.updateUserStatus = async (req, res, next) => {
       if (!['user', 'admin'].includes(role)) return next(new AppError('Invalid role', 400));
       updateData.role = role;
     }
-    const user = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    const user = await User.findByIdAndUpdate(req.params.id, updateData, { new: true }).select('+isActive');
     if (!user) return next(new AppError('User not found', 404));
     res.json({ success: true, message: 'User updated', data: { user } });
   } catch (err) { next(err); }

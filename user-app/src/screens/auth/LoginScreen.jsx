@@ -18,7 +18,7 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = () => {
     if (!validateEmail(email)) return Alert.alert('Invalid Email', 'Please enter a valid email address');
-    if (password.length < 6)   return Alert.alert('Invalid Password', 'Password must be at least 8 characters');
+    if (password.length < 8)   return Alert.alert('Invalid Password', 'Password must be at least 8 characters');
     dispatch(loginUser({ email: email.toLowerCase().trim(), password }));
   };
 

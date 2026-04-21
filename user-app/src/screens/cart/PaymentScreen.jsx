@@ -56,8 +56,8 @@ export default function PaymentScreen({ navigation, route }) {
       });
 
       dispatch(resetCart());
-      navigation.replace('OrderDetail', { orderId });
       Alert.alert('Payment Successful! 🎉', `Order #${orderNumber} confirmed.\nPayment ID: ${paymentData.razorpay_payment_id}`);
+      navigation.navigate('Orders', { screen: 'OrderDetail', params: { orderId } });
     } catch (err) {
       if (err?.code === 0) {
         setError('Payment cancelled by user');
@@ -77,7 +77,7 @@ export default function PaymentScreen({ navigation, route }) {
         orderId,
       });
       dispatch(resetCart());
-      navigation.replace('OrderDetail', { orderId });
+      navigation.navigate('Orders', { screen: 'OrderDetail', params: { orderId } });
     } catch (e) {
       Alert.alert('Error', 'Verification failed in simulation mode');
     }

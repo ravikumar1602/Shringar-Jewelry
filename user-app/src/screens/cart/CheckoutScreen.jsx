@@ -1,11 +1,13 @@
 // ──────────────── CheckoutScreen.jsx ────────────────
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { ordersAPI } from '../../services/api';
+import { resetCart } from '../../store/slices/cartSlice';
 import { COLORS, formatCurrency } from '../../utils/helpers';
 
 export default function CheckoutScreen({ navigation }) {
+  const dispatch  = useDispatch();
   const { user }  = useSelector(s => s.auth);
   const { cart }  = useSelector(s => s.cart);
   const [selectedAddress, setSelectedAddress] = useState(user?.addresses?.find(a => a.isDefault)?._id || user?.addresses?.[0]?._id || null);
@@ -25,8 +27,9 @@ export default function CheckoutScreen({ navigation }) {
       const order = res.data.data.order;
 
       if (paymentMethod === 'cod') {
+        dispatch(resetCart());
         Alert.alert('Order Placed! 🎉', `Your order #${order.orderNumber} has been placed.\nCash on Delivery selected.`, [
-          { text: 'View Order', onPress: () => navigation.replace('OrderDetail', { orderId: order._id }) },
+          { text: 'View Order', onPress: () => navigation.navigate('Orders', { screen: 'OrderDetail', params: { orderId: order._id } }) },
         ]);
       } else {
         navigation.navigate('Payment', { orderId: order._id, orderNumber: order.orderNumber, amount: order.totalAmount });

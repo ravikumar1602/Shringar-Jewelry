@@ -14,9 +14,9 @@ export function OrdersScreen({ navigation }) {
   const load = useCallback(async (p = 1) => {
     try {
       const res = await ordersAPI.getAll({ page: p, limit: 10 });
-      const { orders: data, pagination } = res.data;
-      if (p === 1) setOrders(data.orders);
-      else setOrders(prev => [...prev, ...data.orders]);
+      const { orders, pagination } = res.data.data;
+      if (p === 1) setOrders(orders);
+      else setOrders(prev => [...prev, ...orders]);
       setHasMore(p < pagination.pages);
     } catch {} finally { setLoading(false); setRefresh(false); }
   }, []);

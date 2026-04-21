@@ -53,7 +53,7 @@ const productsSlice = createSlice({
      .addCase(fetchProducts.fulfilled, (s, a) => {
        s.loading = false;
        s.list = a.payload.data.products;
-       s.pagination = a.payload.pagination;
+       s.pagination = a.payload.data.pagination;
      })
      .addCase(fetchProducts.rejected, (s, a) => { s.loading = false; s.error = a.payload; })
 
