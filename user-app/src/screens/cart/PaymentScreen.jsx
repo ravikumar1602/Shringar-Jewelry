@@ -4,6 +4,7 @@ import { paymentAPI } from '../../services/api';
 import { useDispatch } from 'react-redux';
 import { resetCart } from '../../store/slices/cartSlice';
 import { COLORS, formatCurrency } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // NOTE: react-native-razorpay must be linked: npx react-native link react-native-razorpay
 let RazorpayCheckout;
@@ -56,7 +57,7 @@ export default function PaymentScreen({ navigation, route }) {
       });
 
       dispatch(resetCart());
-      Alert.alert('Payment Successful! 🎉', `Order #${orderNumber} confirmed.\nPayment ID: ${paymentData.razorpay_payment_id}`);
+      Alert.alert('Payment Successful!', `Order #${orderNumber} confirmed.\nPayment ID: ${paymentData.razorpay_payment_id}`);
       navigation.navigate('Orders', { screen: 'OrderDetail', params: { orderId } });
     } catch (err) {
       if (err?.code === 0) {
@@ -93,7 +94,7 @@ export default function PaymentScreen({ navigation, route }) {
         </>
       ) : error ? (
         <>
-          <Text style={s.errorEmoji}>❌</Text>
+          <Ionicons name="close-circle" size={56} color="#DC2626" />
           <Text style={s.errorTitle}>Payment Failed</Text>
           <Text style={s.errorMsg}>{error}</Text>
           <TouchableOpacity onPress={initPayment} style={s.retryBtn}>
@@ -112,7 +113,6 @@ const s = StyleSheet.create({
   container:   { flex: 1, backgroundColor: '#1A1A2E', justifyContent: 'center', alignItems: 'center', padding: 32 },
   loadingText: { color: '#9CA3AF', fontSize: 15, marginTop: 20, textAlign: 'center' },
   amount:      { color: COLORS.primary, fontSize: 28, fontWeight: '700', marginTop: 12 },
-  errorEmoji:  { fontSize: 56, marginBottom: 16 },
   errorTitle:  { color: '#fff', fontSize: 22, fontWeight: '700', marginBottom: 10 },
   errorMsg:    { color: '#9CA3AF', fontSize: 14, textAlign: 'center', lineHeight: 22, marginBottom: 28 },
   retryBtn:    { backgroundColor: COLORS.primary, borderRadius: 12, paddingHorizontal: 32, paddingVertical: 14, minWidth: 200, alignItems: 'center' },

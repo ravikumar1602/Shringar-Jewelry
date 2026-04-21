@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchFeaturedProducts, fetchCategories } from '../../store/slices/productsSlice';
 import { fetchCart } from '../../store/slices/cartSlice';
 import { COLORS, formatCurrency } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function ProductCard({ product, onPress }) {
   const discount = product.comparePrice > product.price
@@ -15,7 +16,7 @@ function ProductCard({ product, onPress }) {
       <View style={s.imageBox}>
         {image?.url
           ? <Image source={{ uri: image.url }} style={s.productImg} resizeMode="cover" />
-          : <Text style={{ fontSize: 40 }}>💍</Text>}
+          : <Ionicons name="diamond" size={40} color="#9CA3AF" />}
         {discount > 0 && (
           <View style={s.discountBadge}><Text style={s.discountText}>{discount}% OFF</Text></View>
         )}
@@ -32,7 +33,10 @@ function ProductCard({ product, onPress }) {
           )}
         </View>
         {product.ratingsAverage > 0 && (
-          <Text style={s.rating}>⭐ {product.ratingsAverage} ({product.ratingsCount})</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Ionicons name="star" size={12} color="#F59E0B" />
+            <Text style={s.rating}>{product.ratingsAverage} ({product.ratingsCount})</Text>
+          </View>
         )}
       </View>
     </TouchableOpacity>
@@ -44,7 +48,7 @@ function CategoryChip({ cat, onPress }) {
     <TouchableOpacity onPress={onPress} style={s.catChip}>
       {cat.image?.url
         ? <Image source={{ uri: cat.image.url }} style={s.catImg} />
-        : <Text style={{ fontSize: 28 }}>🏷️</Text>}
+        : <Ionicons name="pricetag" size={28} color="#9CA3AF" />}
       <Text style={s.catName} numberOfLines={1}>{cat.name}</Text>
     </TouchableOpacity>
   );
@@ -69,10 +73,16 @@ export default function HomeScreen({ navigation }) {
 
       {/* Hero */}
       <View style={s.hero}>
-        <Text style={s.heroGreet}>Hello, {user?.name?.split(' ')[0]} 👋</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <Text style={s.heroGreet}>Hello, {user?.name?.split(' ')[0]}</Text>
+          <Ionicons name="hand-left" size={20} color={COLORS.primary} />
+        </View>
         <Text style={s.heroTitle}>Find Your Perfect Jewelry</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Search')} style={s.searchBar}>
-          <Text style={{ color: '#9CA3AF', fontSize: 14 }}>🔍  Search necklaces, rings, bangles...</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Ionicons name="search" size={18} color="#9CA3AF" />
+            <Text style={{ color: '#9CA3AF', fontSize: 14 }}>Search necklaces, rings, bangles...</Text>
+          </View>
         </TouchableOpacity>
       </View>
 
@@ -99,7 +109,10 @@ export default function HomeScreen({ navigation }) {
 
       {/* Banner */}
       <View style={s.banner}>
-        <Text style={s.bannerTitle}>✨ New Collection 2025</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <Ionicons name="sparkles" size={20} color={COLORS.primary} />
+          <Text style={s.bannerTitle}>New Collection 2025</Text>
+        </View>
         <Text style={s.bannerSub}>Handcrafted with love & tradition</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Search')} style={s.bannerBtn}>
           <Text style={s.bannerBtnText}>Explore Now →</Text>
@@ -109,7 +122,10 @@ export default function HomeScreen({ navigation }) {
       {/* Featured Products */}
       <View style={s.section}>
         <View style={s.sectionHeader}>
-          <Text style={s.sectionTitle}>✨ Featured Products</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <Ionicons name="star" size={18} color={COLORS.primary} />
+            <Text style={s.sectionTitle}>Featured Products</Text>
+          </View>
           <TouchableOpacity onPress={() => navigation.navigate('Search')}>
             <Text style={s.seeAll}>View All</Text>
           </TouchableOpacity>

@@ -5,6 +5,7 @@ import { fetchProductDetail } from '../../store/slices/productsSlice';
 import { addToCart } from '../../store/slices/cartSlice';
 import { authAPI } from '../../services/api';
 import { COLORS, formatCurrency } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const { width } = Dimensions.get('window');
 
@@ -34,7 +35,7 @@ export default function ProductDetailScreen({ navigation, route }) {
   const handleAddToCart = async () => {
     if (!inStock) return Alert.alert('Out of Stock', 'This product is currently unavailable');
     const result = await dispatch(addToCart({ productId: product._id, quantity }));
-    if (addToCart.fulfilled.match(result)) Alert.alert('Added! 🛒', `${product.name} added to cart`, [
+    if (addToCart.fulfilled.match(result)) Alert.alert('Added!', `${product.name} added to cart`, [
       { text: 'Continue Shopping' },
       { text: 'View Cart', onPress: () => navigation.navigate('Cart') },
     ]);
@@ -55,11 +56,11 @@ export default function ProductDetailScreen({ navigation, route }) {
         <View style={s.imgContainer}>
           {mainImg?.url
             ? <Image source={{ uri: mainImg.url }} style={s.mainImg} resizeMode="contain" />
-            : <View style={s.imgPlaceholder}><Text style={{ fontSize: 60 }}>💍</Text></View>
+            : <View style={s.imgPlaceholder}><Ionicons name="diamond" size={60} color="#9CA3AF" /></View>
           }
           {discount > 0 && <View style={s.discBadge}><Text style={s.discText}>{discount}% OFF</Text></View>}
           <TouchableOpacity onPress={handleWishlist} style={s.wishBtn}>
-            <Text style={{ fontSize: 22 }}>{isWishlisted ? '❤️' : '🤍'}</Text>
+            <Ionicons name={isWishlisted ? 'heart' : 'heart-outline'} size={22} color={isWishlisted ? COLORS.primary : '#9CA3AF'} />
           </TouchableOpacity>
         </View>
 
@@ -90,7 +91,10 @@ export default function ProductDetailScreen({ navigation, route }) {
           {/* Rating */}
           {product.ratingsAverage > 0 && (
             <View style={s.ratingRow}>
-              <Text style={s.ratingBadge}>⭐ {product.ratingsAverage}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <Ionicons name="star" size={13} color="#F59E0B" />
+                <Text style={s.ratingBadge}>{product.ratingsAverage}</Text>
+              </View>
               <Text style={s.ratingCount}>{product.ratingsCount} reviews</Text>
             </View>
           )}
@@ -150,7 +154,7 @@ export default function ProductDetailScreen({ navigation, route }) {
         </View>
         <TouchableOpacity onPress={handleAddToCart} disabled={!inStock || cartLoading}
           style={[s.addBtn, (!inStock || cartLoading) && { backgroundColor: '#9CA3AF' }]}>
-          {cartLoading ? <ActivityIndicator color="#fff" /> : <Text style={s.addBtnText}>{inStock ? '🛒 Add to Cart' : 'Out of Stock'}</Text>}
+          {cartLoading ? <ActivityIndicator color="#fff" /> : <Text style={s.addBtnText}>{inStock ? 'Add to Cart' : 'Out of Stock'}</Text>}
         </TouchableOpacity>
       </View>
     </View>

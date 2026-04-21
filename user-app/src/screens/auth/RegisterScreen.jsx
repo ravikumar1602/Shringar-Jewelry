@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Activi
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser, clearError } from '../../store/slices/authSlice';
 import { COLORS, validateEmail, validatePhone } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function RegisterScreen({ navigation }) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirmPassword: '' });
@@ -28,7 +29,7 @@ export default function RegisterScreen({ navigation }) {
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={s.container} keyboardShouldPersistTaps="handled">
         <View style={s.logoBox}>
-          <Text style={s.logoEmoji}>✨</Text>
+          <Ionicons name="diamond" size={40} color={COLORS.primary} />
           <Text style={s.logoText}>Create Account</Text>
           <Text style={s.logoSub}>Join the Shringar family</Text>
         </View>
@@ -55,7 +56,7 @@ export default function RegisterScreen({ navigation }) {
             <TextInput value={form.password} onChangeText={v => set('password', v)} placeholder="Min 8 characters (A-z + 0-9)" placeholderTextColor="#9CA3AF"
               secureTextEntry={!showPwd} style={[s.input, { flex: 1, marginBottom: 0 }]} />
             <TouchableOpacity onPress={() => setShowPwd(!showPwd)} style={{ padding: 12 }}>
-              <Text style={{ fontSize: 18 }}>{showPwd ? '🙈' : '👁️'}</Text>
+              <Ionicons name={showPwd ? 'eye-off' : 'eye'} size={20} color="#6B7280" />
             </TouchableOpacity>
           </View>
           <Text style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 16, marginTop: 4 }}>Must have uppercase, lowercase and number</Text>
@@ -83,7 +84,6 @@ export default function RegisterScreen({ navigation }) {
 const s = StyleSheet.create({
   container:  { flexGrow: 1, backgroundColor: '#1A1A2E', justifyContent: 'center', padding: 24 },
   logoBox:    { alignItems: 'center', marginBottom: 28 },
-  logoEmoji:  { fontSize: 40 },
   logoText:   { fontSize: 24, fontWeight: '700', color: COLORS.primary, marginTop: 8 },
   logoSub:    { fontSize: 13, color: '#9CA3AF', marginTop: 4 },
   card:       { backgroundColor: '#fff', borderRadius: 20, padding: 28 },

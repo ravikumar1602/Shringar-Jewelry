@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { addToCart } from '../../store/slices/cartSlice';
 import { updateLocalUser } from '../../store/slices/authSlice';
 import { COLORS, formatCurrency } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function WishlistScreen({ navigation }) {
   const [wishlist, setWishlist] = useState([]);
@@ -29,7 +30,7 @@ export default function WishlistScreen({ navigation }) {
   const handleAddToCart = async (product) => {
     const result = await dispatch(addToCart({ productId: product._id, quantity: 1 }));
     if (addToCart.fulfilled.match(result))
-      Alert.alert('Added! 🛒', `${product.name} added to cart`, [
+      Alert.alert('Added!', `${product.name} added to cart`, [
         { text: 'Continue' },
         { text: 'View Cart', onPress: () => navigation.navigate('Cart') },
       ]);
@@ -40,7 +41,7 @@ export default function WishlistScreen({ navigation }) {
 
   if (!wishlist.length) return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.bg, padding: 32 }}>
-      <Text style={{ fontSize: 52, marginBottom: 16 }}>🤍</Text>
+      <Ionicons name="heart-outline" size={52} color="#9CA3AF" />
       <Text style={{ fontSize: 20, fontWeight: '700', color: '#1A1A2E', marginBottom: 8 }}>Wishlist is Empty</Text>
       <Text style={{ fontSize: 14, color: '#6B7280', marginBottom: 24, textAlign: 'center' }}>Tap the heart icon on any product to save it here</Text>
       <TouchableOpacity onPress={() => navigation.navigate('Home')} style={{ backgroundColor: COLORS.primary, borderRadius: 12, paddingHorizontal: 28, paddingVertical: 13 }}>
@@ -64,7 +65,7 @@ export default function WishlistScreen({ navigation }) {
           <View style={s.card}>
             <TouchableOpacity onPress={() => navigation.navigate('ProductDetail', { productId: p._id })}>
               <View style={s.imgBox}>
-                {img?.url ? <Image source={{ uri: img.url }} style={{ width: '100%', height: '100%' }} resizeMode="cover" /> : <Text style={{ fontSize: 36 }}>💍</Text>}
+                {img?.url ? <Image source={{ uri: img.url }} style={{ width: '100%', height: '100%' }} resizeMode="cover" /> : <Ionicons name="diamond" size={36} color="#9CA3AF" />}
                 {discount > 0 && <View style={s.badge}><Text style={s.badgeText}>{discount}%</Text></View>}
               </View>
               <View style={{ padding: 10 }}>
@@ -74,10 +75,13 @@ export default function WishlistScreen({ navigation }) {
             </TouchableOpacity>
             <View style={s.actions}>
               <TouchableOpacity onPress={() => handleAddToCart(p)} style={s.cartBtn}>
-                <Text style={s.cartBtnText}>🛒 Add</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                  <Ionicons name="cart" size={12} color="#fff" />
+                  <Text style={s.cartBtnText}>Add</Text>
+                </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleRemove(p._id)} style={s.removeBtn}>
-                <Text style={{ fontSize: 18 }}>💔</Text>
+                <Ionicons name="heart-dislike" size={18} color="#DC2626" />
               </TouchableOpacity>
             </View>
           </View>

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../../store/slices/authSlice';
 import { authAPI } from '../../services/api';
 import { COLORS } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Field = ({ label, ...props }) => (
   <View style={{ marginBottom: 16 }}>
@@ -49,9 +50,15 @@ export default function EditProfileScreen({ navigation, route }) {
       <ScrollView style={s.container} keyboardShouldPersistTaps="handled">
         {/* Tabs */}
         <View style={s.tabs}>
-          {[['profile', '👤 Profile'], ['password', '🔒 Password']].map(([key, lbl]) => (
+          {[
+            { key: 'profile', icon: 'person', label: 'Profile' },
+            { key: 'password', icon: 'lock-closed', label: 'Password' }
+          ].map(({ key, icon, label }) => (
             <TouchableOpacity key={key} onPress={() => setTab(key)} style={[s.tab, tab === key && s.tabActive]}>
-              <Text style={[s.tabText, tab === key && s.tabTextActive]}>{lbl}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Ionicons name={icon} size={16} color={tab === key ? COLORS.primary : '#6B7280'} />
+                <Text style={[s.tabText, tab === key && s.tabTextActive]}>{label}</Text>
+              </View>
             </TouchableOpacity>
           ))}
         </View>
@@ -66,7 +73,7 @@ export default function EditProfileScreen({ navigation, route }) {
                 <Text style={s.disabledText}>{user?.email}</Text>
               </View>
               <TouchableOpacity onPress={handleSaveProfile} disabled={loading} style={[s.btn, loading && { backgroundColor: '#9CA3AF' }]}>
-                {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>💾 Save Profile</Text>}
+                {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Save Profile</Text>}
               </TouchableOpacity>
             </>
           ) : (
@@ -75,7 +82,7 @@ export default function EditProfileScreen({ navigation, route }) {
               <Field label="New Password *" value={pwds.newPwd} onChangeText={v => setPwds(p => ({ ...p, newPwd: v }))} placeholder="Min 8 chars (A-z + 0-9)" secureTextEntry />
               <Field label="Confirm New Password *" value={pwds.confirm} onChangeText={v => setPwds(p => ({ ...p, confirm: v }))} placeholder="Re-enter new password" secureTextEntry />
               <TouchableOpacity onPress={handleChangePassword} disabled={saving} style={[s.btn, saving && { backgroundColor: '#9CA3AF' }]}>
-                {saving ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>🔒 Change Password</Text>}
+                {saving ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Change Password</Text>}
               </TouchableOpacity>
             </>
           )}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Alert, Image } from 'react-native';
 import { ordersAPI } from '../../services/api';
 import { COLORS, formatCurrency, formatDateTime, STATUS_CONFIG } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function OrderDetailScreen({ navigation, route }) {
   const { orderId } = route.params;
@@ -43,7 +44,10 @@ export default function OrderDetailScreen({ navigation, route }) {
       {/* Tracking */}
       {order.trackingHistory?.length > 0 && (
         <View style={s.card}>
-          <Text style={s.cardTitle}>📍 Tracking History</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Ionicons name="location" size={16} color={COLORS.primary} />
+            <Text style={s.cardTitle}>Tracking History</Text>
+          </View>
           {order.trackingHistory.map((event, i) => (
             <View key={i} style={s.trackRow}>
               <View style={s.trackDot} />
@@ -65,7 +69,10 @@ export default function OrderDetailScreen({ navigation, route }) {
 
       {/* Items */}
       <View style={s.card}>
-        <Text style={s.cardTitle}>📦 Items Ordered</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Ionicons name="cube" size={16} color={COLORS.primary} />
+          <Text style={s.cardTitle}>Items Ordered</Text>
+        </View>
         {order.items?.map((item, i) => (
           <View key={i} style={s.itemRow}>
             {item.image && <Image source={{ uri: item.image }} style={s.itemImg} />}
@@ -80,17 +87,26 @@ export default function OrderDetailScreen({ navigation, route }) {
 
       {/* Address */}
       <View style={s.card}>
-        <Text style={s.cardTitle}>📍 Delivery Address</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Ionicons name="location" size={16} color={COLORS.primary} />
+          <Text style={s.cardTitle}>Delivery Address</Text>
+        </View>
         <Text style={s.addrName}>{order.shippingAddress?.fullName}</Text>
         <Text style={s.addrLine}>{order.shippingAddress?.addressLine1}</Text>
         {order.shippingAddress?.addressLine2 && <Text style={s.addrLine}>{order.shippingAddress.addressLine2}</Text>}
         <Text style={s.addrLine}>{order.shippingAddress?.city}, {order.shippingAddress?.state} - {order.shippingAddress?.pincode}</Text>
-        <Text style={s.addrLine}>📞 {order.shippingAddress?.phone}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <Ionicons name="call" size={12} color="#6B7280" />
+          <Text style={s.addrLine}>{order.shippingAddress?.phone}</Text>
+        </View>
       </View>
 
       {/* Payment */}
       <View style={s.card}>
-        <Text style={s.cardTitle}>💳 Payment Details</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Ionicons name="card" size={16} color={COLORS.primary} />
+          <Text style={s.cardTitle}>Payment Details</Text>
+        </View>
         {[
           ['Method', order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online (Razorpay)'],
           ['Status', order.paymentStatus],

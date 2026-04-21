@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ordersAPI } from '../../services/api';
 import { resetCart } from '../../store/slices/cartSlice';
 import { COLORS, formatCurrency } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function CheckoutScreen({ navigation }) {
   const dispatch  = useDispatch();
@@ -28,7 +29,7 @@ export default function CheckoutScreen({ navigation }) {
 
       if (paymentMethod === 'cod') {
         dispatch(resetCart());
-        Alert.alert('Order Placed! 🎉', `Your order #${order.orderNumber} has been placed.\nCash on Delivery selected.`, [
+        Alert.alert('Order Placed!', `Your order #${order.orderNumber} has been placed.\nCash on Delivery selected.`, [
           { text: 'View Order', onPress: () => navigation.navigate('Orders', { screen: 'OrderDetail', params: { orderId: order._id } }) },
         ]);
       } else {
@@ -43,7 +44,10 @@ export default function CheckoutScreen({ navigation }) {
     <ScrollView style={s.container} showsVerticalScrollIndicator={false}>
       {/* Delivery Address */}
       <View style={s.section}>
-        <Text style={s.sectionTitle}>📍 Delivery Address</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Ionicons name="location" size={18} color={COLORS.primary} />
+          <Text style={s.sectionTitle}>Delivery Address</Text>
+        </View>
         {user?.addresses?.length === 0 && (
           <TouchableOpacity onPress={() => navigation.navigate('Addresses')} style={s.addAddrBtn}>
             <Text style={s.addAddrText}>+ Add Delivery Address</Text>
@@ -57,7 +61,10 @@ export default function CheckoutScreen({ navigation }) {
               <Text style={s.addrName}>{addr.fullName} • {addr.label}</Text>
               <Text style={s.addrText}>{addr.addressLine1}, {addr.addressLine2 ? `${addr.addressLine2}, ` : ''}{addr.city}</Text>
               <Text style={s.addrText}>{addr.state} - {addr.pincode}</Text>
-              <Text style={s.addrPhone}>📞 {addr.phone}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <Ionicons name="call" size={12} color="#6B7280" />
+                <Text style={s.addrPhone}>{addr.phone}</Text>
+              </View>
             </View>
             {addr.isDefault && <Text style={s.defaultTag}>Default</Text>}
           </TouchableOpacity>
@@ -66,15 +73,18 @@ export default function CheckoutScreen({ navigation }) {
 
       {/* Payment Method */}
       <View style={s.section}>
-        <Text style={s.sectionTitle}>💳 Payment Method</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Ionicons name="card" size={18} color={COLORS.primary} />
+          <Text style={s.sectionTitle}>Payment Method</Text>
+        </View>
         {[
-          { id: 'razorpay', icon: '💳', label: 'Online Payment', sub: 'UPI, Cards, Net Banking (via Razorpay)' },
-          { id: 'cod',      icon: '💵', label: 'Cash on Delivery', sub: 'Pay when your order arrives' },
+          { id: 'razorpay', icon: 'card', label: 'Online Payment', sub: 'UPI, Cards, Net Banking (via Razorpay)' },
+          { id: 'cod',      icon: 'cash', label: 'Cash on Delivery', sub: 'Pay when your order arrives' },
         ].map(pm => (
           <TouchableOpacity key={pm.id} onPress={() => setPaymentMethod(pm.id)}
             style={[s.pmCard, paymentMethod === pm.id && s.pmCardActive]}>
             <View style={[s.radio, paymentMethod === pm.id && s.radioActive]} />
-            <Text style={{ fontSize: 24, marginRight: 10 }}>{pm.icon}</Text>
+            <Ionicons name={pm.icon} size={24} color={paymentMethod === pm.id ? COLORS.primary : '#6B7280'} style={{ marginRight: 10 }} />
             <View>
               <Text style={s.pmLabel}>{pm.label}</Text>
               <Text style={s.pmSub}>{pm.sub}</Text>
@@ -85,7 +95,10 @@ export default function CheckoutScreen({ navigation }) {
 
       {/* Order Summary */}
       <View style={s.section}>
-        <Text style={s.sectionTitle}>📦 Order Summary ({cart?.totalItems} items)</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Ionicons name="cube" size={18} color={COLORS.primary} />
+          <Text style={s.sectionTitle}>Order Summary ({cart?.totalItems} items)</Text>
+        </View>
         {cart?.items?.map(item => (
           <View key={item._id} style={s.orderItem}>
             <Text style={s.orderItemName} numberOfLines={1}>{item.name} × {item.quantity}</Text>
@@ -103,7 +116,7 @@ export default function CheckoutScreen({ navigation }) {
       </View>
 
       <TouchableOpacity onPress={handlePlaceOrder} disabled={loading} style={[s.placeBtn, loading && { backgroundColor: '#9CA3AF' }]}>
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.placeBtnText}>{paymentMethod === 'cod' ? '📦 Place Order (COD)' : `💳 Proceed to Pay ${formatCurrency(total)}`}</Text>}
+        {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.placeBtnText}>{paymentMethod === 'cod' ? 'Place Order (COD)' : `Proceed to Pay ${formatCurrency(total)}`}</Text>}
       </TouchableOpacity>
       <View style={{ height: 32 }} />
     </ScrollView>

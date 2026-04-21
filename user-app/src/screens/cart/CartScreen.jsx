@@ -3,12 +3,13 @@ import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, Alert, Activ
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart, updateCartItem, removeFromCart, applyCoupon, removeCoupon, clearCouponMessage } from '../../store/slices/cartSlice';
 import { COLORS, formatCurrency } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function CartItem({ item, onUpdate, onRemove }) {
   return (
     <View style={s.item}>
       <View style={s.itemImg}>
-        {item.image ? <Image source={{ uri: item.image }} style={{ width: '100%', height: '100%' }} resizeMode="cover" /> : <Text style={{ fontSize: 28 }}>💍</Text>}
+        {item.image ? <Image source={{ uri: item.image }} style={{ width: '100%', height: '100%' }} resizeMode="cover" /> : <Ionicons name="diamond" size={28} color="#9CA3AF" />}
       </View>
       <View style={{ flex: 1 }}>
         <Text style={s.itemName} numberOfLines={2}>{item.name}</Text>
@@ -17,7 +18,7 @@ function CartItem({ item, onUpdate, onRemove }) {
           <TouchableOpacity onPress={() => onUpdate(item._id, item.quantity - 1)} style={s.qBtn}><Text style={s.qBtnText}>−</Text></TouchableOpacity>
           <Text style={s.qVal}>{item.quantity}</Text>
           <TouchableOpacity onPress={() => onUpdate(item._id, item.quantity + 1)} style={s.qBtn}><Text style={s.qBtnText}>+</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => onRemove(item._id)} style={s.removeBtn}><Text style={{ fontSize: 16 }}>🗑️</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => onRemove(item._id)} style={s.removeBtn}><Ionicons name="trash" size={16} color="#DC2626" /></TouchableOpacity>
         </View>
       </View>
       <Text style={s.lineTotal}>{formatCurrency(item.price * item.quantity)}</Text>
@@ -36,7 +37,7 @@ export default function CartScreen({ navigation }) {
 
   useEffect(() => {
     if (couponMessage) {
-      Alert.alert('🎉 Coupon Applied!', couponMessage);
+      Alert.alert('Coupon Applied!', couponMessage);
       dispatch(clearCouponMessage());
     }
   }, [couponMessage]);
@@ -64,7 +65,7 @@ export default function CartScreen({ navigation }) {
   if (!cart || cart.items?.length === 0) {
     return (
       <View style={s.emptyContainer}>
-        <Text style={{ fontSize: 64, marginBottom: 16 }}>🛒</Text>
+        <Ionicons name="cart" size={64} color="#9CA3AF" />
         <Text style={s.emptyTitle}>Your cart is empty</Text>
         <Text style={s.emptySubtitle}>Explore our beautiful jewelry collection</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} style={s.shopBtn}>
@@ -94,7 +95,7 @@ export default function CartScreen({ navigation }) {
             <View style={s.couponBox}>
               {cart.couponCode ? (
                 <View style={s.couponApplied}>
-                  <Text style={s.couponText}>🎟️ Coupon: <Text style={{ fontWeight: '700', color: COLORS.primary }}>{cart.couponCode}</Text> applied!</Text>
+                  <Text style={s.couponText}>Coupon: <Text style={{ fontWeight: '700', color: COLORS.primary }}>{cart.couponCode}</Text> applied!</Text>
                   <TouchableOpacity onPress={handleRemoveCoupon}><Text style={{ color: '#DC2626', fontSize: 13 }}>Remove</Text></TouchableOpacity>
                 </View>
               ) : (
@@ -114,7 +115,7 @@ export default function CartScreen({ navigation }) {
               <Text style={s.summaryTitle}>Order Summary</Text>
               {[
                 ['Subtotal', formatCurrency(subtotal)],
-                ['Shipping', shipping === 0 ? 'FREE 🎉' : formatCurrency(shipping)],
+                ['Shipping', shipping === 0 ? 'FREE' : formatCurrency(shipping)],
                 ...(discount > 0 ? [['Coupon Discount', `- ${formatCurrency(discount)}`]] : []),
               ].map(([k, v]) => (
                 <View key={k} style={s.summaryRow}>

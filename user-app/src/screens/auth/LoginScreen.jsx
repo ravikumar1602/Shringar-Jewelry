@@ -6,6 +6,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, clearError } from '../../store/slices/authSlice';
 import { COLORS, validateEmail } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail]       = useState('');
@@ -27,7 +28,7 @@ export default function LoginScreen({ navigation }) {
       <ScrollView contentContainerStyle={s.container} keyboardShouldPersistTaps="handled">
         {/* Logo */}
         <View style={s.logoBox}>
-          <Text style={s.logoEmoji}>✨</Text>
+          <Ionicons name="diamond" size={48} color={COLORS.primary} />
           <Text style={s.logoText}>Shringar Jewelry</Text>
           <Text style={s.logoSub}>Exquisite Craftsmanship</Text>
         </View>
@@ -53,7 +54,7 @@ export default function LoginScreen({ navigation }) {
               secureTextEntry={!showPwd} style={[s.input, { flex: 1, marginBottom: 0 }]}
             />
             <TouchableOpacity onPress={() => setShowPwd(!showPwd)} style={s.eyeBtn}>
-              <Text style={{ fontSize: 18 }}>{showPwd ? '🙈' : '👁️'}</Text>
+              <Ionicons name={showPwd ? 'eye-off' : 'eye'} size={20} color="#6B7280" />
             </TouchableOpacity>
           </View>
 
@@ -80,7 +81,6 @@ export default function LoginScreen({ navigation }) {
 const s = StyleSheet.create({
   container:  { flexGrow: 1, backgroundColor: '#1A1A2E', justifyContent: 'center', padding: 24 },
   logoBox:    { alignItems: 'center', marginBottom: 32 },
-  logoEmoji:  { fontSize: 48 },
   logoText:   { fontSize: 26, fontWeight: '700', color: COLORS.primary, marginTop: 8 },
   logoSub:    { fontSize: 13, color: '#9CA3AF', marginTop: 4 },
   card:       { backgroundColor: '#fff', borderRadius: 20, padding: 28 },

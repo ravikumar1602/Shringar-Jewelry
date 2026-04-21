@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, RefreshControl, ActivityIndicator } from 'react-native';
 import { ordersAPI } from '../../services/api';
 import { COLORS, formatCurrency, formatDate, STATUS_CONFIG } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export function OrdersScreen({ navigation }) {
   const [orders, setOrders]     = useState([]);
@@ -49,9 +50,12 @@ export function OrdersScreen({ navigation }) {
         </View>
         <View style={s.cardFooter}>
           <Text style={s.date}>Placed on {formatDate(o.createdAt)}</Text>
-          <Text style={[s.payMethod, { color: o.paymentMethod === 'cod' ? '#92400E' : '#065F46' }]}>
-            {o.paymentMethod === 'cod' ? '💵 COD' : '💳 Online'}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Ionicons name={o.paymentMethod === 'cod' ? 'cash' : 'card'} size={12} color={o.paymentMethod === 'cod' ? '#92400E' : '#065F46'} />
+            <Text style={[s.payMethod, { color: o.paymentMethod === 'cod' ? '#92400E' : '#065F46' }]}>
+              {o.paymentMethod === 'cod' ? 'COD' : 'Online'}
+            </Text>
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -66,8 +70,8 @@ export function OrdersScreen({ navigation }) {
       onEndReached={loadMore} onEndReachedThreshold={0.3}
       ListEmptyComponent={
         <View style={{ alignItems: 'center', paddingTop: 60 }}>
-          <Text style={{ fontSize: 48, marginBottom: 12 }}>📦</Text>
-          <Text style={{ fontSize: 18, fontWeight: '700', color: '#1A1A2E' }}>No Orders Yet</Text>
+          <Ionicons name="cube" size={48} color="#9CA3AF" />
+          <Text style={{ fontSize: 18, fontWeight: '700', color: '#1A1A2E', marginTop: 12 }}>No Orders Yet</Text>
           <Text style={{ color: '#6B7280', marginTop: 6 }}>Your orders will appear here</Text>
         </View>
       }

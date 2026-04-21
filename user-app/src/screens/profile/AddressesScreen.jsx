@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { authAPI } from '../../services/api';
 import { updateLocalUser } from '../../store/slices/authSlice';
 import { COLORS } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const EMPTY_ADDR = { label: 'Home', fullName: '', phone: '', addressLine1: '', addressLine2: '', city: '', state: '', pincode: '', isDefault: false };
 
@@ -59,8 +60,8 @@ export default function AddressesScreen({ navigation }) {
       <ScrollView contentContainerStyle={{ padding: 12, gap: 10 }} showsVerticalScrollIndicator={false}>
         {user?.addresses?.length === 0 && (
           <View style={s.empty}>
-            <Text style={{ fontSize: 40, marginBottom: 12 }}>📍</Text>
-            <Text style={s.emptyTitle}>No Addresses Saved</Text>
+            <Ionicons name="location" size={40} color="#9CA3AF" />
+            <Text style={[s.emptyTitle, { marginTop: 12 }]}>No Addresses Saved</Text>
             <Text style={s.emptySub}>Add a delivery address to get started</Text>
           </View>
         )}
@@ -73,10 +74,23 @@ export default function AddressesScreen({ navigation }) {
             <Text style={s.addrName}>{addr.fullName}</Text>
             <Text style={s.addrText}>{addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ''}</Text>
             <Text style={s.addrText}>{addr.city}, {addr.state} - {addr.pincode}</Text>
-            <Text style={s.addrPhone}>📞 {addr.phone}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Ionicons name="call" size={12} color="#6B7280" />
+              <Text style={s.addrPhone}>{addr.phone}</Text>
+            </View>
             <View style={s.addrActions}>
-              <TouchableOpacity onPress={() => openEdit(addr)} style={s.editAddrBtn}><Text style={s.editAddrText}>✏️ Edit</Text></TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDelete(addr._id)} style={s.deleteAddrBtn}><Text style={s.deleteAddrText}>🗑️ Delete</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => openEdit(addr)} style={s.editAddrBtn}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                  <Ionicons name="create" size={13} color="#2563EB" />
+                  <Text style={s.editAddrText}>Edit</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDelete(addr._id)} style={s.deleteAddrBtn}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                  <Ionicons name="trash" size={13} color="#DC2626" />
+                  <Text style={s.deleteAddrText}>Delete</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         ))}
@@ -93,7 +107,10 @@ export default function AddressesScreen({ navigation }) {
           <TouchableOpacity style={s.overlay} onPress={() => setModal(null)} activeOpacity={1} />
           <View style={s.sheet}>
             <View style={s.sheetHandle} />
-            <Text style={s.sheetTitle}>{modal === 'add' ? '➕ Add Address' : '✏️ Edit Address'}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Ionicons name={modal === 'add' ? 'add-circle' : 'create'} size={20} color={COLORS.primary} />
+              <Text style={s.sheetTitle}>{modal === 'add' ? 'Add Address' : 'Edit Address'}</Text>
+            </View>
             <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
               <View style={s.row}>
                 {['Home','Work','Other'].map(lbl => (
@@ -118,7 +135,7 @@ export default function AddressesScreen({ navigation }) {
                 <Text style={s.defaultText}>Set as default address</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleSave} disabled={saving} style={[s.saveBtn, saving && { backgroundColor: '#9CA3AF' }]}>
-                {saving ? <ActivityIndicator color="#fff" /> : <Text style={s.saveBtnText}>💾 Save Address</Text>}
+                {saving ? <ActivityIndicator color="#fff" /> : <Text style={s.saveBtnText}>Save Address</Text>}
               </TouchableOpacity>
               <View style={{ height: 20 }} />
             </ScrollView>

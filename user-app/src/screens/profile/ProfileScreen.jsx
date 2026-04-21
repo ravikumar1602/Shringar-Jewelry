@@ -3,15 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } fr
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../store/slices/authSlice';
 import { COLORS } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const MenuItem = ({ icon, label, sub, onPress, danger }) => (
+const MenuItem = ({ iconName, label, sub, onPress, danger }) => (
   <TouchableOpacity onPress={onPress} style={s.menuItem}>
-    <Text style={s.menuIcon}>{icon}</Text>
+    <Ionicons name={iconName} size={22} color={danger ? '#DC2626' : COLORS.primary} style={{ width: 28, textAlign: 'center' }} />
     <View style={{ flex: 1 }}>
       <Text style={[s.menuLabel, danger && { color: '#DC2626' }]}>{label}</Text>
       {sub && <Text style={s.menuSub}>{sub}</Text>}
     </View>
-    <Text style={{ color: '#9CA3AF', fontSize: 16 }}>›</Text>
+    <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
   </TouchableOpacity>
 );
 
@@ -36,31 +37,42 @@ export default function ProfileScreen({ navigation }) {
         </View>
         <Text style={s.name}>{user?.name}</Text>
         <Text style={s.email}>{user?.email}</Text>
-        {user?.phone && <Text style={s.phone}>📞 {user.phone}</Text>}
+        {user?.phone && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Ionicons name="call" size={13} color="#9CA3AF" />
+            <Text style={s.phone}>{user.phone}</Text>
+          </View>
+        )}
         <TouchableOpacity onPress={() => navigation.navigate('EditProfile')} style={s.editBtn}>
-          <Text style={s.editBtnText}>✏️ Edit Profile</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Ionicons name="create" size={13} color={COLORS.primary} />
+            <Text style={s.editBtnText}>Edit Profile</Text>
+          </View>
         </TouchableOpacity>
       </View>
 
       {/* Menu */}
       <View style={s.section}>
         <Text style={s.sectionTitle}>My Account</Text>
-        <MenuItem icon="📦" label="My Orders"    sub="Track & manage orders"    onPress={() => navigation.navigate('Orders')} />
-        <MenuItem icon="❤️" label="Wishlist"      sub="Saved items"              onPress={() => navigation.navigate('Wishlist')} />
-        <MenuItem icon="📍" label="Addresses"    sub={`${user?.addresses?.length || 0} saved addresses`} onPress={() => navigation.navigate('Addresses')} />
+        <MenuItem iconName="cube" label="My Orders"    sub="Track & manage orders"    onPress={() => navigation.navigate('Orders')} />
+        <MenuItem iconName="heart" label="Wishlist"      sub="Saved items"              onPress={() => navigation.navigate('Wishlist')} />
+        <MenuItem iconName="location" label="Addresses"    sub={`${user?.addresses?.length || 0} saved addresses`} onPress={() => navigation.navigate('Addresses')} />
       </View>
 
       <View style={s.section}>
         <Text style={s.sectionTitle}>Settings</Text>
-        <MenuItem icon="🔒" label="Change Password" sub="Update your password"  onPress={() => navigation.navigate('EditProfile', { changePassword: true })} />
+        <MenuItem iconName="lock-closed" label="Change Password" sub="Update your password"  onPress={() => navigation.navigate('EditProfile', { changePassword: true })} />
       </View>
 
       <View style={s.section}>
-        <MenuItem icon="🚪" label="Logout" danger onPress={handleLogout} />
+        <MenuItem iconName="log-out" label="Logout" danger onPress={handleLogout} />
       </View>
 
       <View style={s.footer}>
-        <Text style={s.footerText}>✨ Shringar Jewelry v1.0.0</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <Ionicons name="sparkles" size={13} color={COLORS.primary} />
+          <Text style={s.footerText}>Shringar Jewelry v1.0.0</Text>
+        </View>
         <Text style={s.footerSub}>Handcrafted with love</Text>
       </View>
     </ScrollView>
@@ -81,7 +93,6 @@ const s = StyleSheet.create({
   section:      { backgroundColor: '#fff', marginHorizontal: 12, marginTop: 12, borderRadius: 14, overflow: 'hidden', elevation: 1, shadowColor: '#000', shadowOpacity: .04, shadowRadius: 4 },
   sectionTitle: { fontSize: 12, fontWeight: '700', color: '#9CA3AF', paddingHorizontal: 16, paddingTop: 14, paddingBottom: 4, textTransform: 'uppercase', letterSpacing: .5 },
   menuItem:     { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#F9FAFB', gap: 14 },
-  menuIcon:     { fontSize: 22, width: 28, textAlign: 'center' },
   menuLabel:    { fontSize: 14, fontWeight: '600', color: '#1A1A2E' },
   menuSub:      { fontSize: 12, color: '#9CA3AF', marginTop: 1 },
   footer:       { alignItems: 'center', padding: 28, marginTop: 8 },

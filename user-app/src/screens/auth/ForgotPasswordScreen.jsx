@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import { authAPI } from '../../services/api';
 import { COLORS } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function ForgotPasswordScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -26,7 +27,7 @@ export default function ForgotPasswordScreen({ navigation }) {
           <Text style={s.backText}>← Back</Text>
         </TouchableOpacity>
 
-        <Text style={s.emoji}>{sent ? '📧' : '🔒'}</Text>
+        <Ionicons name={sent ? 'mail' : 'lock-closed'} size={52} color={COLORS.primary} />
         <Text style={s.title}>{sent ? 'Email Sent!' : 'Forgot Password?'}</Text>
         <Text style={s.subtitle}>
           {sent
@@ -58,7 +59,6 @@ const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#1A1A2E', padding: 28, justifyContent: 'center' },
   backBtn:   { position: 'absolute', top: 50, left: 24 },
   backText:  { color: COLORS.primary, fontSize: 16, fontWeight: '600' },
-  emoji:     { fontSize: 52, textAlign: 'center', marginBottom: 16 },
   title:     { fontSize: 26, fontWeight: '700', color: '#fff', textAlign: 'center', marginBottom: 12 },
   subtitle:  { fontSize: 14, color: '#9CA3AF', textAlign: 'center', marginBottom: 32, lineHeight: 22 },
   input:     { backgroundColor: '#fff', borderRadius: 12, padding: 14, fontSize: 15, color: '#1A1A2E', marginBottom: 20 },

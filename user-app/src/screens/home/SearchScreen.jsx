@@ -3,6 +3,7 @@ import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Image, A
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, fetchCategories } from '../../store/slices/productsSlice';
 import { COLORS, formatCurrency } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const SORT_OPTIONS = [
   { label: 'Newest', value: '-createdAt' },
@@ -19,7 +20,7 @@ function ProductItem({ product, onPress }) {
   return (
     <TouchableOpacity onPress={onPress} style={s.item}>
       <View style={s.itemImg}>
-        {img?.url ? <Image source={{ uri: img.url }} style={{ width: '100%', height: '100%' }} resizeMode="cover" /> : <Text style={{ fontSize: 30 }}>💍</Text>}
+        {img?.url ? <Image source={{ uri: img.url }} style={{ width: '100%', height: '100%' }} resizeMode="cover" /> : <Ionicons name="diamond" size={30} color="#9CA3AF" />}
         {discount > 0 && <View style={s.badge}><Text style={s.badgeText}>{discount}%</Text></View>}
       </View>
       <View style={{ flex: 1 }}>
@@ -29,7 +30,12 @@ function ProductItem({ product, onPress }) {
           <Text style={s.price}>{formatCurrency(product.price)}</Text>
           {product.comparePrice > product.price && <Text style={s.mrp}>{formatCurrency(product.comparePrice)}</Text>}
         </View>
-        {product.ratingsAverage > 0 && <Text style={s.rating}>⭐ {product.ratingsAverage} ({product.ratingsCount})</Text>}
+        {product.ratingsAverage > 0 && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Ionicons name="star" size={11} color="#F59E0B" />
+            <Text style={s.rating}>{product.ratingsAverage} ({product.ratingsCount})</Text>
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -61,10 +67,10 @@ export default function SearchScreen({ navigation, route }) {
     <View style={s.container}>
       {/* Search input */}
       <View style={s.searchBox}>
-        <Text style={{ fontSize: 16, marginRight: 6 }}>🔍</Text>
+        <Ionicons name="search" size={16} color="#9CA3AF" style={{ marginRight: 6 }} />
         <TextInput value={search} onChangeText={v => { setSearch(v); setPage(1); }} placeholder="Search jewelry..."
           placeholderTextColor="#9CA3AF" style={s.searchInput} returnKeyType="search" />
-        {search.length > 0 && <TouchableOpacity onPress={() => setSearch('')}><Text style={{ color: '#9CA3AF', fontSize: 16 }}>✕</Text></TouchableOpacity>}
+        {search.length > 0 && <TouchableOpacity onPress={() => setSearch('')}><Ionicons name="close-circle" size={16} color="#9CA3AF" /></TouchableOpacity>}
       </View>
 
       {/* Category filter */}
