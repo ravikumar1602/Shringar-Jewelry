@@ -72,8 +72,8 @@ export default function EditProfileScreen({ navigation, route }) {
                 <Text style={s.label}>Email (cannot be changed)</Text>
                 <Text style={s.disabledText}>{user?.email}</Text>
               </View>
-              <TouchableOpacity onPress={handleSaveProfile} disabled={loading} style={[s.btn, loading && { backgroundColor: '#9CA3AF' }]}>
-                {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Save Profile</Text>}
+              <TouchableOpacity onPress={handleSaveProfile} disabled={loading} style={[s.btn, loading && { backgroundColor: '#9CA3AF' }]} activeOpacity={0.7}>
+                {loading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.btnText}>Save Profile</Text>}
               </TouchableOpacity>
             </>
           ) : (
@@ -81,8 +81,8 @@ export default function EditProfileScreen({ navigation, route }) {
               <Field label="Current Password *" value={pwds.current} onChangeText={v => setPwds(p => ({ ...p, current: v }))} placeholder="Enter current password" secureTextEntry />
               <Field label="New Password *" value={pwds.newPwd} onChangeText={v => setPwds(p => ({ ...p, newPwd: v }))} placeholder="Min 8 chars (A-z + 0-9)" secureTextEntry />
               <Field label="Confirm New Password *" value={pwds.confirm} onChangeText={v => setPwds(p => ({ ...p, confirm: v }))} placeholder="Re-enter new password" secureTextEntry />
-              <TouchableOpacity onPress={handleChangePassword} disabled={saving} style={[s.btn, saving && { backgroundColor: '#9CA3AF' }]}>
-                {saving ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Change Password</Text>}
+              <TouchableOpacity onPress={handleChangePassword} disabled={saving} style={[s.btn, saving && { backgroundColor: '#9CA3AF' }]} activeOpacity={0.7}>
+                {saving ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.btnText}>Change Password</Text>}
               </TouchableOpacity>
             </>
           )}

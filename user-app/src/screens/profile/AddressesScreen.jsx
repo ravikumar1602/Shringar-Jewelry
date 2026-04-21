@@ -134,8 +134,8 @@ export default function AddressesScreen({ navigation }) {
                 </View>
                 <Text style={s.defaultText}>Set as default address</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={handleSave} disabled={saving} style={[s.saveBtn, saving && { backgroundColor: '#9CA3AF' }]}>
-                {saving ? <ActivityIndicator color="#fff" /> : <Text style={s.saveBtnText}>Save Address</Text>}
+              <TouchableOpacity onPress={handleSave} disabled={saving} style={[s.saveBtn, saving && { backgroundColor: '#9CA3AF' }]} activeOpacity={0.7}>
+                {saving ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.saveBtnText}>Save Address</Text>}
               </TouchableOpacity>
               <View style={{ height: 20 }} />
             </ScrollView>

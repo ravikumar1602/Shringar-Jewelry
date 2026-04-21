@@ -5,6 +5,7 @@ import { fetchFeaturedProducts, fetchCategories } from '../../store/slices/produ
 import { fetchCart } from '../../store/slices/cartSlice';
 import { COLORS, formatCurrency } from '../../utils/helpers';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ProductSkeleton } from '../../components/SkeletonLoader';
 
 function ProductCard({ product, onPress }) {
   const discount = product.comparePrice > product.price
@@ -56,20 +57,33 @@ function CategoryChip({ cat, onPress }) {
 
 export default function HomeScreen({ navigation }) {
   const dispatch   = useDispatch();
-  const { featured, categories, loading } = useSelector(s => s.products);
-  const { user }   = useSelector(s => s.auth);
+  const { featured, categories, loading, error } = useSelector(s => s.products);
+  const { user, isAuthenticated }   = useSelector(s => s.auth);
 
   const loadData = useCallback(() => {
+    if (!featured.length) dispatch(fetchFeaturedProducts());
+    if (!categories.length) dispatch(fetchCategories());
+    if (isAuthenticated) dispatch(fetchCart());
+  }, [isAuthenticated]);
+
+  const handleRetry = () => {
     dispatch(fetchFeaturedProducts());
     dispatch(fetchCategories());
-    dispatch(fetchCart());
-  }, [dispatch]);
+  };
 
   useEffect(() => { loadData(); }, [loadData]);
 
   return (
     <ScrollView style={s.container} showsVerticalScrollIndicator={false}
       refreshControl={<RefreshControl refreshing={loading} onRefresh={loadData} colors={[COLORS.primary]} />}>
+      {error && (
+        <View style={{ padding: 20, alignItems: 'center' }}>
+          <Text style={{ color: '#9CA3AF' }}>Failed to load products</Text>
+          <TouchableOpacity onPress={handleRetry} style={{ padding: 10, backgroundColor: COLORS.primary, borderRadius: 8, marginTop: 10 }}>
+            <Text style={{ color: '#fff' }}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Hero */}
       <View style={s.hero}>
@@ -140,6 +154,13 @@ export default function HomeScreen({ navigation }) {
           )}
           ListEmptyComponent={!loading && (
             <Text style={{ color: '#9CA3AF', padding: 20 }}>No featured products found</Text>
+          )}
+          ListHeaderComponent={loading && (
+            <View style={{ flexDirection: 'row', gap: 12 }}>
+              <ProductSkeleton />
+              <ProductSkeleton />
+              <ProductSkeleton />
+            </View>
           )}
         />
       </View>

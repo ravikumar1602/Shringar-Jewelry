@@ -27,6 +27,9 @@ const HEADER_OPTS = {
   headerStyle: { backgroundColor: '#1A1A2E' },
   headerTintColor: COLORS.primary,
   headerTitleStyle: { fontWeight: '700', color: '#fff' },
+  animation: 'slide_from_right',
+  gestureEnabled: true,
+  gestureDirection: 'horizontal',
 };
 
 function HomeStack() {

@@ -4,6 +4,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, RefreshContr
 import { ordersAPI } from '../../services/api';
 import { COLORS, formatCurrency, formatDate, STATUS_CONFIG } from '../../utils/helpers';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { OrderSkeleton } from '../../components/SkeletonLoader';
 
 export function OrdersScreen({ navigation }) {
   const [orders, setOrders]     = useState([]);
@@ -19,12 +20,23 @@ export function OrdersScreen({ navigation }) {
       if (p === 1) setOrders(orders);
       else setOrders(prev => [...prev, ...orders]);
       setHasMore(p < pagination.pages);
-    } catch {} finally { setLoading(false); setRefresh(false); }
+      setError(null);
+    } catch (err) {
+      setError(err);
+    } finally { setLoading(false); setRefresh(false); }
   }, []);
 
   useEffect(() => { load(1); }, []);
 
-  const handleRefresh = () => { setRefresh(true); setPage(1); load(1); };
+  const handleRefresh = () => {
+    setRefresh(true);
+    load(1).finally(() => setRefresh(false));
+  };
+
+  const handleRetry = () => {
+    load(1);
+  };
+
   const loadMore = () => { if (hasMore && !loading) { const next = page + 1; setPage(next); load(next); } };
 
   const renderOrder = ({ item: o }) => {
@@ -61,7 +73,15 @@ export function OrdersScreen({ navigation }) {
     );
   };
 
-  if (loading) return <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 60 }} />;
+  if (loading) {
+    return (
+      <View style={{ padding: 12, gap: 10 }}>
+        <OrderSkeleton />
+        <OrderSkeleton />
+        <OrderSkeleton />
+      </View>
+    );
+  }
 
   return (
     <FlatList data={orders} keyExtractor={i => i._id} contentContainerStyle={{ padding: 12, gap: 10 }}
@@ -70,9 +90,14 @@ export function OrdersScreen({ navigation }) {
       onEndReached={loadMore} onEndReachedThreshold={0.3}
       ListEmptyComponent={
         <View style={{ alignItems: 'center', paddingTop: 60 }}>
-          <Ionicons name="cube" size={48} color="#9CA3AF" />
-          <Text style={{ fontSize: 18, fontWeight: '700', color: '#1A1A2E', marginTop: 12 }}>No Orders Yet</Text>
-          <Text style={{ color: '#6B7280', marginTop: 6 }}>Your orders will appear here</Text>
+          <View style={s.emptyIconBox}>
+            <Ionicons name="cube-outline" size={64} color={COLORS.primary} />
+          </View>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: '#1A1A2E', marginTop: 16 }}>No Orders Yet</Text>
+          <Text style={{ color: '#6B7280', marginTop: 8, textAlign: 'center', paddingHorizontal: 40 }}>Your orders will appear here once you place an order</Text>
+          <TouchableOpacity onPress={handleRetry} style={{ backgroundColor: COLORS.primary, borderRadius: 8, paddingHorizontal: 20, paddingVertical: 10, marginTop: 16 }} activeOpacity={0.7}>
+            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 14 }}>Retry</Text>
+          </TouchableOpacity>
         </View>
       }
     />
@@ -80,6 +105,7 @@ export function OrdersScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
+  emptyIconBox: { width: 120, height: 120, borderRadius: 60, backgroundColor: 'rgba(200,169,110,0.1)', justifyContent: 'center', alignItems: 'center' },
   card:        { backgroundColor: '#fff', borderRadius: 14, padding: 16, elevation: 1, shadowColor: '#000', shadowOpacity: .05, shadowRadius: 4 },
   cardHeader:  { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   orderNum:    { fontSize: 15, fontWeight: '700', color: COLORS.primary },

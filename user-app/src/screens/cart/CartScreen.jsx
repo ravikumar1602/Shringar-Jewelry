@@ -65,10 +65,12 @@ export default function CartScreen({ navigation }) {
   if (!cart || cart.items?.length === 0) {
     return (
       <View style={s.emptyContainer}>
-        <Ionicons name="cart" size={64} color="#9CA3AF" />
+        <View style={s.emptyIconBox}>
+          <Ionicons name="cart-outline" size={80} color={COLORS.primary} />
+        </View>
         <Text style={s.emptyTitle}>Your cart is empty</Text>
         <Text style={s.emptySubtitle}>Explore our beautiful jewelry collection</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={s.shopBtn}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={s.shopBtn} activeOpacity={0.7}>
           <Text style={s.shopBtnText}>Shop Now</Text>
         </TouchableOpacity>
       </View>
@@ -103,7 +105,7 @@ export default function CartScreen({ navigation }) {
                   <TextInput value={couponCode} onChangeText={v => setCouponCode(v.toUpperCase())}
                     placeholder="Enter coupon code" placeholderTextColor="#9CA3AF"
                     autoCapitalize="characters" style={s.couponInput} />
-                  <TouchableOpacity onPress={handleApplyCoupon} disabled={couponLoading} style={s.couponBtn}>
+                  <TouchableOpacity onPress={handleApplyCoupon} disabled={couponLoading} style={s.couponBtn} activeOpacity={0.7}>
                     {couponLoading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.couponBtnText}>Apply</Text>}
                   </TouchableOpacity>
                 </View>
@@ -146,10 +148,11 @@ export default function CartScreen({ navigation }) {
 
 const s = StyleSheet.create({
   container:      { flex: 1, backgroundColor: COLORS.bg },
-  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32 },
-  emptyTitle:     { fontSize: 20, fontWeight: '700', color: '#1A1A2E', marginBottom: 8 },
-  emptySubtitle:  { fontSize: 14, color: '#6B7280', marginBottom: 24 },
-  shopBtn:        { backgroundColor: COLORS.primary, borderRadius: 12, paddingHorizontal: 28, paddingVertical: 14 },
+  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32, backgroundColor: COLORS.bg },
+  emptyIconBox: { width: 140, height: 140, borderRadius: 70, backgroundColor: 'rgba(200,169,110,0.1)', justifyContent: 'center', alignItems: 'center' },
+  emptyTitle:     { fontSize: 20, fontWeight: '700', color: '#1A1A2E', marginTop: 16 },
+  emptySubtitle:  { fontSize: 14, color: '#6B7280', marginTop: 8, textAlign: 'center' },
+  shopBtn:        { backgroundColor: COLORS.primary, borderRadius: 12, paddingHorizontal: 28, paddingVertical: 14, marginTop: 24 },
   shopBtnText:    { color: '#fff', fontSize: 15, fontWeight: '700' },
   item:           { flexDirection: 'row', backgroundColor: '#fff', borderRadius: 12, padding: 12, gap: 12, elevation: 1, shadowColor: '#000', shadowOpacity: .05, shadowRadius: 4 },
   itemImg:        { width: 80, height: 80, borderRadius: 10, backgroundColor: '#F3F4F6', overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },

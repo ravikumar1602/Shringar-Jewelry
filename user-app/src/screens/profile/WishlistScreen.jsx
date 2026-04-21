@@ -6,6 +6,7 @@ import { addToCart } from '../../store/slices/cartSlice';
 import { updateLocalUser } from '../../store/slices/authSlice';
 import { COLORS, formatCurrency } from '../../utils/helpers';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ProductSkeleton } from '../../components/SkeletonLoader';
 
 export default function WishlistScreen({ navigation }) {
   const [wishlist, setWishlist] = useState([]);
@@ -18,6 +19,14 @@ export default function WishlistScreen({ navigation }) {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  const handleRetry = () => {
+    setLoading(true);
+    authAPI.getMe()
+      .then(r => setWishlist(r.data.data.user.wishlist || []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  };
 
   const handleRemove = async (productId) => {
     try {
@@ -37,16 +46,32 @@ export default function WishlistScreen({ navigation }) {
     else Alert.alert('Error', result.payload || 'Could not add to cart');
   };
 
-  if (loading) return <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 60 }} />;
+  if (loading) {
+    return (
+      <View style={{ padding: 12, flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+        <ProductSkeleton />
+        <ProductSkeleton />
+        <ProductSkeleton />
+        <ProductSkeleton />
+      </View>
+    );
+  }
 
   if (!wishlist.length) return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.bg, padding: 32 }}>
-      <Ionicons name="heart-outline" size={52} color="#9CA3AF" />
-      <Text style={{ fontSize: 20, fontWeight: '700', color: '#1A1A2E', marginBottom: 8 }}>Wishlist is Empty</Text>
-      <Text style={{ fontSize: 14, color: '#6B7280', marginBottom: 24, textAlign: 'center' }}>Tap the heart icon on any product to save it here</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={{ backgroundColor: COLORS.primary, borderRadius: 12, paddingHorizontal: 28, paddingVertical: 13 }}>
-        <Text style={{ color: '#fff', fontSize: 15, fontWeight: '700' }}>Explore Products</Text>
-      </TouchableOpacity>
+      <View style={s.emptyIconBox}>
+        <Ionicons name="heart-outline" size={64} color={COLORS.primary} />
+      </View>
+      <Text style={{ fontSize: 20, fontWeight: '700', color: '#1A1A2E', marginTop: 16 }}>Wishlist is Empty</Text>
+      <Text style={{ fontSize: 14, color: '#6B7280', marginBottom: 24, marginTop: 8, textAlign: 'center' }}>Tap the heart icon on any product to save it here</Text>
+      <View style={{ flexDirection: 'row', gap: 12 }}>
+        <TouchableOpacity onPress={handleRetry} style={{ backgroundColor: '#1A1A2E', borderRadius: 12, paddingHorizontal: 28, paddingVertical: 13 }} activeOpacity={0.7}>
+          <Text style={{ color: '#fff', fontSize: 15, fontWeight: '700' }}>Retry</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={{ backgroundColor: COLORS.primary, borderRadius: 12, paddingHorizontal: 28, paddingVertical: 13 }} activeOpacity={0.7}>
+          <Text style={{ color: '#fff', fontSize: 15, fontWeight: '700' }}>Explore Products</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -92,6 +117,7 @@ export default function WishlistScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
+  emptyIconBox: { width: 120, height: 120, borderRadius: 60, backgroundColor: 'rgba(200,169,110,0.1)', justifyContent: 'center', alignItems: 'center' },
   card:    { flex: 1, backgroundColor: '#fff', borderRadius: 14, overflow: 'hidden', elevation: 2, shadowColor: '#000', shadowOpacity: .05, shadowRadius: 4 },
   imgBox:  { height: 150, backgroundColor: '#F9FAFB', alignItems: 'center', justifyContent: 'center', position: 'relative' },
   badge:   { position: 'absolute', top: 6, left: 6, backgroundColor: COLORS.primary, borderRadius: 4, paddingHorizontal: 5, paddingVertical: 2 },

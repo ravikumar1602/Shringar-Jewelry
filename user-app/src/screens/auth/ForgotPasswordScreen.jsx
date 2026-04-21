@@ -39,8 +39,8 @@ export default function ForgotPasswordScreen({ navigation }) {
           <>
             <TextInput value={email} onChangeText={setEmail} placeholder="your@email.com" placeholderTextColor="#9CA3AF"
               keyboardType="email-address" autoCapitalize="none" style={s.input} />
-            <TouchableOpacity onPress={handleSend} disabled={loading} style={[s.btn, loading && { backgroundColor: '#9CA3AF' }]}>
-              {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Send Reset Link</Text>}
+            <TouchableOpacity onPress={handleSend} disabled={loading} style={[s.btn, loading && { backgroundColor: '#9CA3AF' }]} activeOpacity={0.7}>
+              {loading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.btnText}>Send Reset Link</Text>}
             </TouchableOpacity>
           </>
         )}

@@ -153,8 +153,8 @@ export default function ProductDetailScreen({ navigation, route }) {
           <Text style={{ fontSize: 18, fontWeight: '700', color: '#1A1A2E' }}>{formatCurrency(product.price * quantity)}</Text>
         </View>
         <TouchableOpacity onPress={handleAddToCart} disabled={!inStock || cartLoading}
-          style={[s.addBtn, (!inStock || cartLoading) && { backgroundColor: '#9CA3AF' }]}>
-          {cartLoading ? <ActivityIndicator color="#fff" /> : <Text style={s.addBtnText}>{inStock ? 'Add to Cart' : 'Out of Stock'}</Text>}
+          style={[s.addBtn, (!inStock || cartLoading) && { backgroundColor: '#9CA3AF' }]} activeOpacity={0.7}>
+          {cartLoading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.addBtnText}>{inStock ? 'Add to Cart' : 'Out of Stock'}</Text>}
         </TouchableOpacity>
       </View>
     </View>

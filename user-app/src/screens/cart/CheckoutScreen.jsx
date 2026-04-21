@@ -115,8 +115,8 @@ export default function CheckoutScreen({ navigation }) {
         </View>
       </View>
 
-      <TouchableOpacity onPress={handlePlaceOrder} disabled={loading} style={[s.placeBtn, loading && { backgroundColor: '#9CA3AF' }]}>
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.placeBtnText}>{paymentMethod === 'cod' ? 'Place Order (COD)' : `Proceed to Pay ${formatCurrency(total)}`}</Text>}
+      <TouchableOpacity onPress={handlePlaceOrder} disabled={loading} style={[s.placeBtn, loading && { backgroundColor: '#9CA3AF' }]} activeOpacity={0.7}>
+        {loading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.placeBtnText}>{paymentMethod === 'cod' ? 'Place Order (COD)' : `Proceed to Pay ${formatCurrency(total)}`}</Text>}
       </TouchableOpacity>
       <View style={{ height: 32 }} />
     </ScrollView>

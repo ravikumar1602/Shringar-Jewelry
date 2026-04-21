@@ -7,6 +7,29 @@ import AuthNavigator from './AuthNavigator';
 import MainNavigator from './MainNavigator';
 import { COLORS } from '../utils/helpers';
 
+const screenOptions = {
+  headerShown: false,
+  cardStyle: { backgroundColor: 'transparent' },
+  cardStyleInterpolator: ({ current, layouts }) => {
+    return {
+      cardStyle: {
+        transform: [
+          {
+            translateX: current.progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [layouts.screen.width, 0],
+            }),
+          },
+        ],
+      },
+    };
+  },
+  transitionSpec: {
+    open: { animation: 'timing', config: { duration: 300 } },
+    close: { animation: 'timing', config: { duration: 300 } },
+  },
+};
+
 export default function AppNavigator() {
   const dispatch = useDispatch();
   const { isAuthenticated, bootstrapped } = useSelector((s) => s.auth);

@@ -12,15 +12,42 @@ export default function LoginScreen({ navigation }) {
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd]   = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const dispatch  = useDispatch();
   const { loading, error } = useSelector((s) => s.auth);
+
+  const validateEmail = (text) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!text) return '';
+    if (!emailRegex.test(text)) return 'Invalid email format';
+    return '';
+  };
+
+  const validatePassword = (text) => {
+    if (!text) return '';
+    if (text.length < 8) return 'Password must be at least 8 characters';
+    return '';
+  };
 
   useEffect(() => { if (error) Alert.alert('Login Failed', error, [{ text: 'OK', onPress: () => dispatch(clearError()) }]); }, [error]);
 
   const handleLogin = () => {
-    if (!validateEmail(email)) return Alert.alert('Invalid Email', 'Please enter a valid email address');
-    if (password.length < 8)   return Alert.alert('Invalid Password', 'Password must be at least 8 characters');
+    const emailErr = validateEmail(email);
+    const pwdErr = validatePassword(password);
+    if (emailErr) return Alert.alert('Invalid Email', emailErr);
+    if (pwdErr) return Alert.alert('Invalid Password', pwdErr);
     dispatch(loginUser({ email: email.toLowerCase().trim(), password }));
+  };
+
+  const handleEmailChange = (text) => {
+    setEmail(text);
+    setEmailError(validateEmail(text));
+  };
+
+  const handlePasswordChange = (text) => {
+    setPassword(text);
+    setPasswordError(validatePassword(text));
   };
 
   return (
@@ -40,30 +67,31 @@ export default function LoginScreen({ navigation }) {
 
           <Text style={s.label}>Email Address</Text>
           <TextInput
-            value={email} onChangeText={setEmail}
+            value={email} onChangeText={handleEmailChange}
             placeholder="you@example.com" placeholderTextColor="#9CA3AF"
-            keyboardType="email-address" autoCapitalize="none"
-            style={s.input}
+            keyboardType="email-address" autoCapitalize="none" style={[s.input, emailError && { borderColor: '#DC2626' }]}
           />
+          {emailError ? <Text style={s.errorText}>{emailError}</Text> : null}
 
           <Text style={s.label}>Password</Text>
           <View style={s.pwdRow}>
             <TextInput
-              value={password} onChangeText={setPassword}
+              value={password} onChangeText={handlePasswordChange}
               placeholder="Min 8 characters" placeholderTextColor="#9CA3AF"
-              secureTextEntry={!showPwd} style={[s.input, { flex: 1, marginBottom: 0 }]}
+              secureTextEntry={!showPwd} style={[s.input, { flex: 1, marginBottom: 0 }, passwordError && { borderColor: '#DC2626' }]}
             />
             <TouchableOpacity onPress={() => setShowPwd(!showPwd)} style={s.eyeBtn}>
               <Ionicons name={showPwd ? 'eye-off' : 'eye'} size={20} color="#6B7280" />
             </TouchableOpacity>
           </View>
+          {passwordError ? <Text style={s.errorText}>{passwordError}</Text> : null}
 
           <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} style={{ alignSelf: 'flex-end', marginBottom: 24, marginTop: 8 }}>
             <Text style={s.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleLogin} disabled={loading} style={[s.btn, loading && { backgroundColor: '#9CA3AF' }]}>
-            {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Sign In</Text>}
+          <TouchableOpacity onPress={handleLogin} disabled={loading} style={[s.btn, loading && { backgroundColor: '#9CA3AF' }]} activeOpacity={0.7}>
+            {loading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.btnText}>Sign In</Text>}
           </TouchableOpacity>
 
           <View style={s.row}>
@@ -87,7 +115,8 @@ const s = StyleSheet.create({
   title:      { fontSize: 22, fontWeight: '700', color: '#1A1A2E', marginBottom: 4 },
   subtitle:   { fontSize: 14, color: '#6B7280', marginBottom: 24 },
   label:      { fontSize: 12, fontWeight: '600', color: '#374151', marginBottom: 6 },
-  input:      { borderWidth: 1.5, borderColor: '#E5E7EB', borderRadius: 10, padding: 12, fontSize: 14, color: '#1A1A2E', marginBottom: 16 },
+  input:      { borderWidth: 1.5, borderColor: '#E5E7EB', borderRadius: 10, padding: 12, fontSize: 14, color: '#1A1A2E', marginBottom: 4 },
+  errorText:  { fontSize: 11, color: '#DC2626', marginBottom: 16 },
   pwdRow:     { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 0 },
   eyeBtn:     { padding: 12 },
   forgotText: { fontSize: 13, color: COLORS.primary, fontWeight: '600' },
