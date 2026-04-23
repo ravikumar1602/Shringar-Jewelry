@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, ActivityIndicator } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loadUserFromStorage } from '../store/slices/authSlice';
 import AuthNavigator from './AuthNavigator';
 import MainNavigator from './MainNavigator';
@@ -45,8 +46,10 @@ export default function AppNavigator() {
   }
 
   return (
-    <NavigationContainer>
-      {isAuthenticated ? <MainNavigator /> : <AuthNavigator />}
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        {isAuthenticated ? <MainNavigator /> : <AuthNavigator />}
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }

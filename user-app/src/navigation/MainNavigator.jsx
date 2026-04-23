@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, Text } from 'react-native';
 import { useSelector } from 'react-redux';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../utils/helpers';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -97,6 +98,7 @@ function TabIcon({ iconName, label, focused, cartCount }) {
 
 export default function MainNavigator() {
   const cartItems = useSelector((s) => s.cart.cart?.totalItems || 0);
+  const insets = useSafeAreaInsets();
 
   return (
     <Tab.Navigator
@@ -104,7 +106,7 @@ export default function MainNavigator() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: '#1A1A2E', borderTopWidth: 0,
-          height: 64, paddingBottom: 8, paddingTop: 6,
+          height: 64 + insets.bottom, paddingBottom: 8 + insets.bottom, paddingTop: 6,
           elevation: 20, shadowColor: '#000',
         },
         tabBarActiveTintColor: COLORS.primary,
