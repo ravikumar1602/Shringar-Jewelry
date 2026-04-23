@@ -90,7 +90,7 @@ exports.createProduct = async (req, res, next) => {
       }
     });
 
-    const product = await Product.create({ ...req.body, images });
+    const product = await Product.create({ ...req.body, images, createdBy: req.user._id });
     res.status(201).json({ success: true, message: 'Product created', data: { product } });
   } catch (err) { next(err); }
 };
@@ -116,7 +116,7 @@ exports.updateProduct = async (req, res, next) => {
       }
     });
 
-    const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    const updated = await Product.findByIdAndUpdate(req.params.id, { ...req.body, updatedBy: req.user._id }, {
       new: true, runValidators: true,
     }).populate('category', 'name slug');
 
@@ -198,7 +198,10 @@ exports.getLowStockProducts = async (req, res, next) => {
 exports.adminGetProducts = async (req, res, next) => {
   try {
     const features = new APIFeatures(
-      Product.find().populate('category', 'name'),
+      Product.find()
+        .populate('category', 'name')
+        .populate('createdBy', 'name email')
+        .populate('updatedBy', 'name email'),
       req.query
     ).filter().search(['name', 'sku']).sort().paginate();
 

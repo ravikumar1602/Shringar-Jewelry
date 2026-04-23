@@ -92,6 +92,16 @@ const productSchema = new mongoose.Schema({
   // Stats
   viewCount: { type: Number, default: 0 },
   soldCount: { type: Number, default: 0 },
+
+  // Management tracking
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  updatedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 }, {
   timestamps: true,
   toJSON: { virtuals: true },

@@ -70,7 +70,7 @@ export default function ProductsList() {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead style={{ background: '#F9FAFB' }}>
               <tr>
-                {['Product','Category','Price','Stock','Status','Actions'].map(h => (
+                {['Product','Category','Price','Stock','Status','Managed By','Actions'].map(h => (
                   <th key={h} style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280', fontWeight: 600, fontSize: 12, borderBottom: '1px solid #E5E7EB' }}>{h}</th>
                 ))}
               </tr>
@@ -115,6 +115,14 @@ export default function ProductsList() {
                     }}>{p.isActive ? '● Active' : '○ Inactive'}</span>
                   </td>
                   <td style={{ padding: '12px 16px' }}>
+                    <div style={{ fontSize: 12, color: '#374151' }}>
+                      {p.createdBy?.name || 'Unknown'}
+                      {p.updatedBy && p.updatedBy._id !== p.createdBy?._id && (
+                        <div style={{ fontSize: 10, color: '#9CA3AF' }}>Updated by: {p.updatedBy.name}</div>
+                      )}
+                    </div>
+                  </td>
+                  <td style={{ padding: '12px 16px' }}>
                     <div style={{ display: 'flex', gap: 6 }}>
                       <button onClick={() => navigate(`/products/edit/${p._id}`)} style={{
                         padding: '6px 12px', background: '#EFF6FF', color: '#2563EB',
@@ -129,7 +137,7 @@ export default function ProductsList() {
                 </tr>
               ))}
               {products.length === 0 && (
-                <tr><td colSpan={6} style={{ textAlign: 'center', padding: 48, color: '#9CA3AF' }}>No products found</td></tr>
+                <tr><td colSpan={7} style={{ textAlign: 'center', padding: 48, color: '#9CA3AF' }}>No products found</td></tr>
               )}
             </tbody>
           </table>
