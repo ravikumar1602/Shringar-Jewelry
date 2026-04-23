@@ -1,9 +1,17 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '@env';
+import { LOCAL_API_URL, PRODUCTION_API_URL, USE_LOCAL_BACKEND } from '@env';
+
+// Smart backend URL selection
+const getBaseURL = () => {
+  const useLocal = USE_LOCAL_BACKEND === 'true';
+  console.log('🔧 Backend Mode:', useLocal ? 'LOCAL (USB)' : 'PRODUCTION (Render)');
+  console.log('🌐 Backend URL:', useLocal ? LOCAL_API_URL : PRODUCTION_API_URL);
+  return useLocal ? LOCAL_API_URL : PRODUCTION_API_URL;
+};
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: getBaseURL(),
   timeout: 30000,
   headers: { 'Content-Type': 'application/json' },
 });
@@ -25,7 +33,8 @@ api.interceptors.response.use(
       try {
         const refreshToken = await AsyncStorage.getItem('refreshToken');
         if (!refreshToken) throw new Error('No refresh token');
-        const res = await axios.post(`${API_URL}/auth/refresh-token`, { refreshToken });
+        const baseURL = getBaseURL();
+        const res = await axios.post(`${baseURL}/auth/refresh-token`, { refreshToken });
         const { accessToken, refreshToken: newRefresh } = res.data.data;
         await AsyncStorage.multiSet([['accessToken', accessToken], ['refreshToken', newRefresh]]);
         original.headers.Authorization = `Bearer ${accessToken}`;
